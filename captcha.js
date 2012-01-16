@@ -1,5 +1,5 @@
-if (phantom.args.length == 0) {
-    console.log('script requires one argument');
+if (phantom.args.length != 3) {
+    console.log('script requires three arguments: word fontsize fileoutput');
     phantom.exit();
 }
 
@@ -8,6 +8,7 @@ var fontSize = 64;
 try {
 	fontSize = parseInt(phantom.args[1]);
 } catch(e) {}
+var outFile = phantom.args[2];
 
 
 var page = require('webpage').create();
@@ -75,7 +76,7 @@ waitFor(function() {
 		return cn == "done";
 	}, function() {
 		console.log("rendered.");
-		page.render('captcha.png');
+		page.render(outFile);
 		phantom.exit();
 	}, 5000
 );        

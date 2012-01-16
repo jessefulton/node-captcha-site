@@ -33,7 +33,7 @@ When the canvas element is created, and subsequently whenever the width and heig
     
     //window.resizeTo(textWidth, fontSize);
 
-    document.body.style.backgroundColor = 'red';
+    document.body.style.backgroundColor = 'white';
     document.body.style.margin = '0px';
     document.body.className = "done";
 };

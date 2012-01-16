@@ -34,8 +34,8 @@ app.configure('development', function(){
 /**
  * App routes.
  */
-app.get('/captcha', function (req, res) {
-	console.log('inside /captcha');
+app.get('/captcha/:text', function (req, res) {
+	console.log('inside /captcha ' + req.params.text);
 	//console.log(app.get('root'));
 	var exec = require('child_process').exec
 	  , script = __dirname + '/captcha.js'
@@ -43,8 +43,13 @@ app.get('/captcha', function (req, res) {
 	
 	console.log(script);
 	
+	var filename = __dirname + "/" + req.params.text + ".png";
+	
 	var cmd = [bin, script];
 	console.log(cmd);
+	cmd.push(req.params.text);
+	cmd.push(64);
+	cmd.push(filename);
 	cmd = cmd.join(' ');
 
 	exec(cmd, function(err) {
@@ -52,7 +57,7 @@ app.get('/captcha', function (req, res) {
 	    	console.log(err);
 	    	return next(err);
 	    }
-	    res.sendfile('captcha.png');
+	    res.sendfile(filename);
 	});
 
 });
