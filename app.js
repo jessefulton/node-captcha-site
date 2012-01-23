@@ -9,6 +9,13 @@ var express = require('express')
 	, redis = require('redis')
 	, Canvas = require('canvas');
 
+
+var Captcha = require('./lib/Captcha')
+	, noiseProducer = require('./lib/noiseProducer')
+	, textProducer = require('./lib/textProducer')
+	, gimp = require('./lib/gimpyRenderer');
+
+
 var app = express.createServer();
 
 app.configure(function(){
@@ -39,49 +46,71 @@ app.get('/captcha/:text/:size?', function (req, res) {
 	var fontSize = req.params.size ? parseInt(req.params.size) : 64;
 
 	var canvas = new Canvas(400,200)
-		, context = canvas.getContext('2d');
-  
-  
-  
-  
-//	context.save();
 
-	var textWidth = 0;
 
-	var font = fontSize + "px Times";
-	//TODO: calculate font size
-	context.font = font;
-    //context.textAlign = "center";
-    //context.fillStyle = "black";
-    //context.strokeStyle = "black";
-    //context.lineWidth = 4;
-    var metrics = context.measureText(text);
-//    context.restore();
-    textWidth = metrics.width;
-  
-  	canvas.width = textWidth;
-  	canvas.height = fontSize;
-	context.font = font;
-  
-  	console.log("TEXT WIDTH = " + textWidth);
-  
-  /*
-	var font = fontSize + "px Times";
-	//TODO: calculate font size
-	context.font = font;
-    context.fillStyle = "black";
-    context.strokeStyle = "black";
-    context.lineWidth = 4;
-*/
+	console.log(text);
+	console.log(fontSize);
 
-	context.translate(0, fontSize-(.2*fontSize)); //FIXME: hack to adjust for descenders
-	context.fillText(text, 0, 0);
+	var captcha = new Captcha(canvas);
+	captcha.init(text, fontSize);
+	//noiseProducer.snow(captcha);
+	//textProducer.basic(captcha, {"text": text, "size": fontSize});
 	
-	canvas.toBuffer(function(err, buff) { 
+	captcha
+		.gimp(gimp.shadow)
+		.noise(noiseProducer.snow)
+		.text(textProducer.basic, {"text": text, "size": fontSize})
+		.render();
+	
+	captcha.canvas.toBuffer(function(err, buff) { 
 		res.contentType("image/png");
 		res.send(buff);
 	});
 	
+});
+
+
+
+/**
+ * App routes.
+ */
+app.get('/phantom_captcha/:text/:size?', function (req, res) {
+
+
+	var exec = require('child_process').exec
+	  , script = __dirname + '/phantom_captcha.js'
+	  , bin = 'phantomjs';
+	
+	var theText = req.params.text;
+	var theSize = req.params.size ? req.params.size : 64;
+	if (theText.lastIndexOf('.') != -1) {
+		console.log(theText + " lastIndexOf = " + theText.lastIndexOf('.'));
+		theText = theText.slice(0, theText.lastIndexOf('.'));
+	}
+	console.log('inside /captcha ' + theText);
+	
+	console.log(script);
+	
+	console.log(app.set('outputdir'));
+	
+	var filename = app.set('outputdir') + "/" + theText + ".png";
+	console.log(filename);
+	
+	var cmd = [bin, script];
+	console.log(cmd);
+	cmd.push(theText);
+	cmd.push(theSize);
+	cmd.push(filename);
+	cmd = cmd.join(' ');
+
+	exec(cmd, function(err) {
+	    if (err) {
+	    	console.log(err);
+	    	return next(err);
+	    }
+	    res.sendfile(filename);
+	});
+
 });
 
 
