@@ -15,6 +15,7 @@ app.configure(function(){
   //let's change this to a local dir? then rsync to media server or use nginx?
   app.set('screenshots', '/tmp');
   app.set('root', __dirname);
+  app.set('outputdir', __dirname + "/public/captcha");
   app.set('phantom', 'phantomjs');
   app.use(express.favicon());
   app.use(stylus.middleware({ src: __dirname + '/public' }));
@@ -35,19 +36,27 @@ app.configure('development', function(){
  * App routes.
  */
 app.get('/captcha/:text', function (req, res) {
-	console.log('inside /captcha ' + req.params.text);
-	//console.log(app.get('root'));
 	var exec = require('child_process').exec
 	  , script = __dirname + '/captcha.js'
 	  , bin = 'phantomjs';
 	
+	var theText = (req.params.text);
+	if (theText.lastIndexOf('.') != -1) {
+		console.log(theText + " lastIndexOf = " + theText.lastIndexOf('.'));
+		theText = theText.slice(0, theText.lastIndexOf('.'));
+	}
+	console.log('inside /captcha ' + theText);
+	
 	console.log(script);
 	
-	var filename = __dirname + "/" + req.params.text + ".png";
+	console.log(app.set('outputdir'));
+	
+	var filename = app.set('outputdir') + "/" + theText + ".png";
+	console.log(filename);
 	
 	var cmd = [bin, script];
 	console.log(cmd);
-	cmd.push(req.params.text);
+	cmd.push(theText);
 	cmd.push(64);
 	cmd.push(filename);
 	cmd = cmd.join(' ');
