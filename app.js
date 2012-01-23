@@ -58,8 +58,9 @@ app.get('/captcha/:text/:size?', function (req, res) {
 	
 	captcha
 		.gimp(gimp.shadow)
-		.noise(noiseProducer.snow)
 		.text(textProducer.basic, {"text": text, "size": fontSize})
+		.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
+		.noise(noiseProducer.straightLines, {"color": "rgba(0,234,0,.5)"})
 		.render();
 	
 	captcha.canvas.toBuffer(function(err, buff) { 
