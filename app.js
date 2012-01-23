@@ -4,14 +4,18 @@ if (!process.env.NODE_ENV) process.env.NODE_ENV = "development";
  * Module dependencies.
  */
 var express = require('express')
-  , stylus = require('stylus')
-  , http = require('http');
+	, stylus = require('stylus')
+	, http = require('http')
+	, redis = require('redis')
+	, Canvas = require('canvas');
 
 var app = express.createServer();
 
 app.configure(function(){
+  app.db = redis.createClient();
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+  app.set('case sensitive routes', true);
   //let's change this to a local dir? then rsync to media server or use nginx?
   app.set('screenshots', '/tmp');
   app.set('root', __dirname);
@@ -31,16 +35,42 @@ app.configure('development', function(){
 
 
 
+app.get('/captcha/:text/:size?', function (req, res) {
+	var text = req.params.text;
+	var fontSize = req.params.size ? parseInt(req.params.size) : 64;
+
+	var canvas = new Canvas(400,200)
+		, context = canvas.getContext('2d');
+  
+	var font = fontSize + "px Times";
+	//TODO: calculate font size
+	context.font = font;
+    context.fillStyle = "black";
+    context.strokeStyle = "black";
+    context.lineWidth = 4;
+
+	context.translate(0, fontSize-(.2*fontSize)); //FIXME: hack to adjust for descenders
+	context.fillText(text, 0, 0);
+	
+	canvas.toBuffer(function(err, buff) { 
+		res.contentType("image/png");
+		res.send(buff);
+	});
+	
+});
 
 /**
  * App routes.
  */
-app.get('/captcha/:text', function (req, res) {
+app.get('/phantom_captcha/:text/:size?', function (req, res) {
+
+
 	var exec = require('child_process').exec
-	  , script = __dirname + '/captcha.js'
+	  , script = __dirname + '/phantom_captcha.js'
 	  , bin = 'phantomjs';
 	
-	var theText = (req.params.text);
+	var theText = req.params.text;
+	var theSize = req.params.size ? req.params.size : 64;
 	if (theText.lastIndexOf('.') != -1) {
 		console.log(theText + " lastIndexOf = " + theText.lastIndexOf('.'));
 		theText = theText.slice(0, theText.lastIndexOf('.'));
@@ -57,7 +87,7 @@ app.get('/captcha/:text', function (req, res) {
 	var cmd = [bin, script];
 	console.log(cmd);
 	cmd.push(theText);
-	cmd.push(64);
+	cmd.push(theSize);
 	cmd.push(filename);
 	cmd = cmd.join(' ');
 
@@ -78,6 +108,7 @@ app.get('/captcha/:text', function (req, res) {
 var port = process.env.PORT || 3000;
 app.listen(port, function () {
     var addr = app.address();
-	console.log('	 app listening on http://' + addr.address + ':' + addr.port);
-    console.log('	NODE_ENV = ' + process.env.NODE_ENV);
+    app.set("basedomain", 'http://' + addr.address + ':' + addr.port);
+	console.log('    app listening on ' + app.set("basedomain"));
+    console.log('    NODE_ENV = ' + process.env.NODE_ENV);
 });
