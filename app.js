@@ -41,10 +41,10 @@ app.configure('development', function(){
 
 
 
-app.get('/captcha/:text/:size?', function (req, res) {
+app.get('/captcha/:text/:size?/:color?', function (req, res) {
 	var text = req.params.text;
 	var fontSize = req.params.size ? parseInt(req.params.size) : 64;
-
+	var color = "#" + (req.params.color ? req.params.color : "000000");
 	var canvas = new Canvas(400,200)
 
 
@@ -58,9 +58,9 @@ app.get('/captcha/:text/:size?', function (req, res) {
 	
 	captcha
 		.gimp(gimp.shadow)
-		.text(textProducer.basic, {"text": text, "size": fontSize})
-		.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
-		.noise(noiseProducer.straightLines, {"color": "rgba(0,234,0,.5)"})
+		.text(textProducer.basic, {"text": text, "size": fontSize, "fillStyle": color })
+		//.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
+		.noise(noiseProducer.straightLines, {"color": color})
 		.render();
 	
 	captcha.canvas.toBuffer(function(err, buff) { 
