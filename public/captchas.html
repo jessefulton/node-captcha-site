@@ -1,0 +1,35 @@
+
+  <html>
+
+    <head>
+
+    <!-- ... your HTML  content ... -->
+
+      <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+
+      <!-- Wrapping the Recaptcha create method in a javascript function -->
+      <script type="text/javascript">
+         function showRecaptcha(element) {
+           Recaptcha.create("6LceIM4SAAAAAN8k8vtnBXqn8HlQgARhg26caTpZ", element, {
+             theme: "red",
+             callback: Recaptcha.focus_response_field});
+         }
+      </script>
+
+      <!-- ... more of your HTML  content ... -->
+
+    </head>
+
+    <body>
+
+      <!-- ... your HTML <body> content ... -->
+
+      <div id="recaptcha_div"></div>
+
+      <input type="button" value="Show reCAPTCHA" onclick="showRecaptcha('recaptcha_div');"></input>
+
+     <!-- ... more of your HTML  content ... -->
+
+    <body>
+
+  </html>

@@ -26,7 +26,7 @@ app.configure(function(){
   //let's change this to a local dir? then rsync to media server or use nginx?
   app.set('screenshots', '/tmp');
   app.set('root', __dirname);
-  app.set('outputdir', __dirname + "/public/captcha");
+  app.set('outputdir', __dirname + "/public/_generated");
   app.use(express.favicon());
   app.use(stylus.middleware({ src: __dirname + '/public' }));
   app.use(express.static(__dirname + '/public'));
@@ -41,24 +41,69 @@ app.configure('development', function(){
 
 
 
-app.get('/captcha/:text/:size?/:color?', function (req, res) {
+/**
+ * App routes.
+ */
+app.get('/', function (req, res) {
+	res.render('index', { layout: true });
+});
+
+app.get('/generate', function (req, res, next) {
+	console.log('matched captcha with queries');
+
+	var text = req.query.text;
+	var fontSize = req.query.size ? parseInt(req.query.size) : 64;
+	var color = "#" + (req.query.color ? req.query.color : "000000");
+	var canvas = new Canvas(400,200)
+	var fontface = req.query.font ? req.query.font : "Times";
+
+	if (text) {
+		console.log(text);
+		console.log(fontSize);
+	
+		var captcha = new Captcha(canvas);
+		captcha.init(text, fontSize, fontface); //, 30);
+		//noiseProducer.snow(captcha);
+		//textProducer.basic(captcha, {"text": text, "size": fontSize});
+		
+		captcha
+			.gimp(gimp.shadow)
+			.text(textProducer.basic, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
+			//.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
+			.noise(noiseProducer.straightLines, {"color": color})
+			.render();
+		
+		captcha.canvas.toBuffer(function(err, buff) { 
+			res.contentType("image/png");
+			res.send(buff);
+		});
+	}
+	else {
+		next();
+	}
+});
+
+app.get('/generate/:text/:size?/:color?/:font?', function (req, res, next) {
+	console.log('matched captcha no query');
+
 	var text = req.params.text;
 	var fontSize = req.params.size ? parseInt(req.params.size) : 64;
 	var color = "#" + (req.params.color ? req.params.color : "000000");
 	var canvas = new Canvas(400,200)
+	var fontface = req.params.font ? req.params.font : "Times";
 
 
 	console.log(text);
 	console.log(fontSize);
 
 	var captcha = new Captcha(canvas);
-	captcha.init(text, fontSize);
+	captcha.init(text, fontSize, fontface); //, 30);
 	//noiseProducer.snow(captcha);
 	//textProducer.basic(captcha, {"text": text, "size": fontSize});
 	
 	captcha
 		.gimp(gimp.shadow)
-		.text(textProducer.basic, {"text": text, "size": fontSize, "fillStyle": color })
+		.text(textProducer.basic, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
 		//.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
 		.noise(noiseProducer.straightLines, {"color": color})
 		.render();
