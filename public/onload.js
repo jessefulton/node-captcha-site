@@ -73,11 +73,8 @@ When the canvas element is created, and subsequently whenever the width and heig
 	}
 	
 	context.restore();
-	
-	context.globalCompositeOperation = "xor";
-	addShape(context, 100, 80, 50, 50);
 
-
+	addShape(context, 100, 40, 70, 30);
 
 
     document.body.style.backgroundColor = 'white';
@@ -88,6 +85,7 @@ When the canvas element is created, and subsequently whenever the width and heig
 
 function addShape(context, x, y, w, h) {
 	context.save();
+	context.globalCompositeOperation = "xor";
 	//context.lineWidth = 6;
 	//context.strokeStyle = "#000";
 	context.beginPath();

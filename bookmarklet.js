@@ -8,7 +8,7 @@ var getTextNodesIn = function(el) {
 };
 
 
-getTextNodesIn($("#doc")).each(function() {
+getTextNodesIn($("#wrapper")).each(function() {
 	var fontSize = $(this.parentNode).css("font-size");
 	var rgbString = $(this.parentNode).css("color");
 	
@@ -22,7 +22,7 @@ getTextNodesIn($("#doc")).each(function() {
 	} 
 	var color = parts.join('').toUpperCase(); // "#0070FF"
 	
-	$(this).replaceWith(this.nodeValue.replace(/([a-z0-9]+)/gi, '<img src="http://0.0.0.0:5100/captcha/$1/' + fontSize + '/' + color + '" />'));
+	$(this).replaceWith(this.nodeValue.replace(/([a-z0-9]+)/gi, '<img src="http://0.0.0.0:5100/generate/$1/' + fontSize + '/' + color + '" />'));
 });
 
 

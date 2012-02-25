@@ -97,15 +97,16 @@ app.get('/generate/:text/:size?/:color?/:font?', function (req, res, next) {
 	console.log(fontSize);
 
 	var captcha = new Captcha(canvas);
-	captcha.init(text, fontSize, fontface); //, 30);
+	captcha.init(text, fontSize, fontface); //, 300);
 	//noiseProducer.snow(captcha);
 	//textProducer.basic(captcha, {"text": text, "size": fontSize});
 	
 	captcha
-		.gimp(gimp.shadow)
+		//.gimp(gimp.shadow)
 		.text(textProducer.basic, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
 		//.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
-		.noise(noiseProducer.straightLines, {"color": color})
+		.noise(noiseProducer.blob, {"fillStyle": color})
+		//.noise(noiseProducer.straightLines, {"color": color})
 		.render();
 	
 	captcha.canvas.toBuffer(function(err, buff) { 
