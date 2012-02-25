@@ -105,9 +105,11 @@ app.get('/generate/:text/:size?/:color?/:font?', function (req, res, next) {
 		//.gimp(gimp.shadow)
 		.text(textProducer.basic, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
 		//.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
-		.noise(noiseProducer.blob, {"fillStyle": color})
+		.noise(noiseProducer.blob, {"fillStyle": color, "h": fontSize, "w": (fontSize * 1.5)})
 		//.noise(noiseProducer.straightLines, {"color": color})
 		.render();
+	
+	captcha.crop();
 	
 	captcha.canvas.toBuffer(function(err, buff) { 
 		res.contentType("image/png");
