@@ -44,14 +44,16 @@ When the canvas element is created, and subsequently whenever the width and heig
 
 	context.save();
 	
-	context.font = '20px arial,sans-serif' ;
+	context.font = '50px arial,sans-serif' ;
 	context.fillStyle = 'black' ;
+/*
 	context.setTransform (1, -0.2, 0, 1, 0, 0);
 	context.fillText ('your text', 100, 100) ;
 	context.setTransform (1, 0.2, 0.6, 2, 0, 0);
 	context.fillText ('number 2', 100, 100) ;
 	context.setTransform (1, 0, 0, 1, 0, 0);
-	
+*/	
+
 	context.translate(40, 50);
 	var str = "words";
 	for (var x = 0; x < str.length; x++)
@@ -73,7 +75,7 @@ When the canvas element is created, and subsequently whenever the width and heig
 	context.restore();
 	
 	context.globalCompositeOperation = "xor";
-	addShape(context, 120, 120, 10, 10);
+	addShape(context, 100, 80, 50, 50);
 
 
 
@@ -99,7 +101,7 @@ function addShape(context, x, y, w, h) {
 			, cp1y = nextX * (getRand((-1*curvePct), curvePct))
 			, cp2x = nextX * (getRand((-1*curvePct), curvePct))
 			, cp2y = nextX * (getRand((-1*curvePct), curvePct));
-		context.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, nextX, nextY);
+		context.bezierCurveTo(nextX-cp1x, nextY-cp1y, nextX-cp2x, nextY-cp2y, nextX, nextY);
 	}
 	//context.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x+w, y);
 	//context.bezierCurveTo(7, 490, 488, 7, 493, 490);
