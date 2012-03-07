@@ -1,4 +1,22 @@
-#foo
-	p: a(href='/generate/words/300/c839d6/Helvetica') Words, 300px, pink, Helvetica
-	p: a(href='/generate?text=words&size=300&color=c839d6&font=Helvetica') Words, 300px, pink, Helvetica
-	p: a(href='/generate?text=words&size=180&color=00FF00&font=Times') Words, 180, Lime, Times
+#generator
+	form(action="generate", method="get")
+		input(type="text", name="text")
+		select(name="font")
+			option(value="Times") Times
+			option(value="Courier") Courier
+			option(value="Arial") Arial
+			option(value="Helvetica") Helvetica
+		select(name="color")
+			option(value="000000") Black
+			option(value="0000FF") Blue
+			option(value="C839D6") Pink
+			option(value="FF0000") Red
+			option(value="00FF00") Lime
+		select(name="color")
+			option(value="16") 16px
+			option(value="32") 32px
+			option(value="64") 64px
+			option(value="128") 128px
+			option(value="256") 256px
+			option(value="512") 512px
+		input(type="submit")

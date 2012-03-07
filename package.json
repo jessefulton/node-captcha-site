@@ -1,0 +1,24 @@
+{
+  "name": "node-captcha",
+  "version": "0.0.1",
+  "author": "Jesse Fulton <jesse.fulton@gmail.com>",
+  "description": "Generate CAPTCHA-style images through node.js + Canvas",
+  "contributors": [ 
+    {
+      "name": "Jesse Fulton",
+      "email": "jessefulton@gmail.com"
+    } 
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jessefulton/node-captcha"
+  },
+  "keywords": [
+    "captcha"
+  ],
+  "dependencies" : {
+    "canvas"   :  "0.10.0",
+    "express" :  "2.5.6",
+    "jade" : "0.20.1"
+  },
+}
