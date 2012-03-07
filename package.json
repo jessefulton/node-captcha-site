@@ -17,7 +17,7 @@
     "captcha"
   ],
   "dependencies" : {
-    "canvas"   :  "0.10.0",
+    "canvas"   :  "git://github.com/elspoono/node-canvas-heroku.git#master",
     "express" :  "2.5.6",
     "jade" : "0.20.1"
   }
