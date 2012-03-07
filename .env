@@ -1,0 +1,2 @@
+LD_PRELOAD='/app/node_modules/canvas/cairo/libcairo.so /app/node_modules/canvas/lib/libpixman-1.so.0 /app/node_modules/canvas/lib/libfreetype.so.6'
+LD_LIBRARY_PATH=/app/node_modules/canvas/cairo
