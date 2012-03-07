@@ -4,7 +4,6 @@ if (!process.env.NODE_ENV) process.env.NODE_ENV = "development";
  * Module dependencies.
  */
 var express = require('express')
-	, stylus = require('stylus')
 	, http = require('http')
 	//, redis = require('redis')
 	, Canvas = require('canvas');
@@ -28,7 +27,6 @@ app.configure(function(){
   app.set('root', __dirname);
   app.set('outputdir', __dirname + "/public/_generated");
   app.use(express.favicon());
-  app.use(stylus.middleware({ src: __dirname + '/public' }));
   app.use(express.static(__dirname + '/public'));
   app.use(app.router);
 });
