@@ -58,16 +58,16 @@ app.get('/generate', function (req, res, next) {
 
 	if (text) {
 	
-		var captcha = new captchafy(canvas);
+		var captcha = captchafy.create(canvas);
 		captcha.init(text, fontSize, fontface); //, 300);
 		//noiseProducer.snow(captcha);
 		//textProducer.basic(captcha, {"text": text, "size": fontSize});
 		
 		captcha
 			//.gimp(gimp.shadow)
-			.add(captcha.text.basic, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
+			.add(captchafy.text.basic, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
 			//.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
-			.add(captcha.noise.blob, {"fillStyle": color, "h": fontSize, "w": (fontSize * 1.5)})
+			.add(captchafy.noise.blob, {"fillStyle": color, "h": fontSize, "w": (fontSize * 1.5)})
 			//.noise(noiseProducer.straightLines, {"color": color})
 			.render();
 		
