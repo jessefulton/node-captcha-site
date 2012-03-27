@@ -1,2 +1,2 @@
-db: redis-server ./db/local.conf
+#db: redis-server ./db/local.conf
 web:	always app.js
