@@ -9,7 +9,7 @@ var express = require('express')
 	, Canvas = require('canvas');
 
 
-var Captcha = require('./lib/Captcha')
+var captchafy = require('captchafy')
 	, noiseProducer = require('./lib/noiseProducer')
 	, textProducer = require('./lib/textProducer')
 	, gimp = require('./lib/gimpyRenderer');
@@ -58,16 +58,16 @@ app.get('/generate', function (req, res, next) {
 
 	if (text) {
 	
-		var captcha = new Captcha(canvas);
+		var captcha = new captchafy(canvas);
 		captcha.init(text, fontSize, fontface); //, 300);
 		//noiseProducer.snow(captcha);
 		//textProducer.basic(captcha, {"text": text, "size": fontSize});
 		
 		captcha
 			//.gimp(gimp.shadow)
-			.text(textProducer.basic, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
+			.add(captcha.text.basic, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
 			//.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
-			.noise(noiseProducer.blob, {"fillStyle": color, "h": fontSize, "w": (fontSize * 1.5)})
+			.add(captcha.noise.blob, {"fillStyle": color, "h": fontSize, "w": (fontSize * 1.5)})
 			//.noise(noiseProducer.straightLines, {"color": color})
 			.render();
 		

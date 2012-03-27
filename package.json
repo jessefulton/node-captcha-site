@@ -2,7 +2,7 @@
   "name": "node-captcha",
   "version": "0.0.1",
   "author": "Jesse Fulton <jesse.fulton@gmail.com>",
-  "description": "Generate CAPTCHA-style images through node.js + Canvas",
+  "description": "Website to generate CAPTCHA-style text images using node.js + Canvas",
   "contributors": [ 
     {
       "name": "Jesse Fulton",
@@ -17,7 +17,8 @@
     "captcha"
   ],
   "dependencies" : {
-    "canvas"   :  "git://github.com/elspoono/node-canvas-heroku.git#master",
+    "canvas"   :  "*",
+    "captchafy": "git://github.com/jessefulton/node-captchafy.git#master",
     "express" :  "2.5.6",
     "jade" : "0.20.1"
   }
