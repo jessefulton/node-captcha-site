@@ -64,11 +64,8 @@ app.get('/generate', function (req, res, next) {
 		//textProducer.basic(captcha, {"text": text, "size": fontSize});
 		
 		captcha
-			//.gimp(gimp.shadow)
-			.add(captchafy.text.basic, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
-			//.noise(noiseProducer.snow, {"colors": [], "size": 10, "density": .75})
-			.add(captchafy.noise.blob, {"fillStyle": color, "h": fontSize, "w": (fontSize * 1.5)})
-			//.noise(noiseProducer.straightLines, {"color": color})
+			.add(captchafy.text.wavy, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
+			.add(captchafy.noise.blob, {"fillStyle": color, "size": fontSize, "h": captcha.fontSize*.75, "w": (captcha.textWidth/1.5) /*, "x": (captcha.textWidth/3.0), "y":0*/ })
 			.render();
 		
 		captcha.crop();
