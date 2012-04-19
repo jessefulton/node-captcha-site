@@ -64,7 +64,7 @@ app.get('/generate', function (req, res, next) {
 		//textProducer.basic(captcha, {"text": text, "size": fontSize});
 		
 		captcha
-			.add(captchafy.text.wavy, {"text": text, "size": fontSize, "fillStyle": color, "font": fontface })
+			.add(captchafy.text.wavy, {"text": text, "size": fontSize, "fillStyle": color, "fontFace": fontface })
 			.add(captchafy.noise.blob, {"fillStyle": color, "size": fontSize, "h": captcha.fontSize*.75, "w": (captcha.textWidth/1.5) /*, "x": (captcha.textWidth/3.0), "y":0*/ })
 			.render();
 		
